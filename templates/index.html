@@ -1,0 +1,85 @@
+<head>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+</head>
+
+<body>
+  <h1>
+      Music Recc.
+  </h1>
+
+  <div id="song input">
+      <form>
+       <fieldset>
+        <legend>Song Info:</legend>
+          Song Title: <input type="text" id="song-title-submit"><br>
+          Artist: <input type="text" id="artist-submit"><br>
+          <input type="button" name="Submit" value="Submit"/ onclick="sendSongInfo()">
+         </fieldset>
+      </form>
+  </div>
+
+  <div>
+<!--   <iframe src="https://open.spotify.com/embed?uri=spotify:user:zeintawil:playlist:53lesAkcF9B8mBCF0CAfHq" width="500" height="200" frameborder="0" allowtransparency="true"></iframe> -->
+  <h1>Spotify Web Playback SDK Quick Start Tutorial</h1>
+  <h2>Open your console log: <code>View > Developer > JavaScript Console</code></h2>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const token = 'BQBayJLvhDp-Tsp-wRnyh04rput5bJuSn65UWKoYnRnBjpTJ9Ujf6QIxr06hbY1lPuKAD9TqWwcdQHxS-VrUWFbvwb_E-y_La8WGLF0Hhnpwjnrws1uMmpwet3EaEcbAykEabU8Ao8RejFoS9_ERiMYURCRjrR4hXIy5';
+      const player = new Spotify.Player({
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => { cb(token); }
+      });
+
+      // Error handling
+      player.addListener('initialization_error', ({ message }) => { console.error(message); });
+      player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      player.addListener('account_error', ({ message }) => { console.error(message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => { console.log(state); });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
+
+      // Not Ready
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player!
+      player.connect();
+    };
+  </script>
+  </div>
+</body>
+
+<script type="text/javascript">
+  function  sendSongInfo(){
+
+    var songTitleObj = $("#song-title-submit")
+    var songTitle = songTitleObj.val()
+
+    var artistObj = $("#artist-submit")
+    var artist = artistObj.val()
+
+    var data = {'song_title': JSON.stringify(songTitle), 'artist': JSON.stringify(artist)}
+
+    $.ajax({
+      type: "POST",
+      url: "/submit",
+      cache: "false",
+      data: data,
+      dataType: "json",
+      success: function(_, status, jqXHR) {
+        console.log('success')
+      }
+    })
+
+  }
+
+</script>
