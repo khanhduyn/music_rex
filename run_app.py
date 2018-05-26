@@ -1,8 +1,14 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import json
 import pickle as pkl
+import httplib
 
-app = Flask(__name__)
+from music_rex.music_rex import MusicRex
+from music_rex.machine_learning import get_similar_songs
+
+app = Flask(__name__, static_url_path='/static')
+
+mr = MusicRex()
 
 @app.route('/')
 def index():
@@ -10,11 +16,29 @@ def index():
 
 @app.route('/submit', methods=["POST"])
 def submit():
-    song_title = request.form.get('song_title')
+    song_title = request.form.get('songTitle')
     artist = request.form.get('artist')
-    import ipdb; ipdb.set_trace()
-    return '', (httplib.NO_CONTENT if success else httplib.BAD_REQUEST)
+    track = mr.get_top_track(artist, song_title)
+    features = mr.get_audio_track_features(track['id'])
+    success = (( features is not None) and len(features) > 0)
 
+    return jsonify(features), (httplib.OK if success else httplib.BAD_REQUEST)
+
+@app.route('/lyrics', methods=["GET"])
+def lyrics():
+    song_title = request.args.get('song_title')
+    artist = request.args.get('artist')
+    lyrics = mr.get_lyrics(artist, song_title)
+    success = (( lyrics is not None) and len(lyrics) > 0)
+    return jsonify(lyrics), (httplib.OK if success else httplib.BAD_REQUEST)
+
+@app.route('/playlist', methods=["POST"])
+def playlist():
+    args = request.get_json(force=True)
+    lyrics = args["lyrics"]
+    features = args["features"]
+    recommendations = get_similar_songs(features, lyrics)
+    return jsonify(recommendations), (httplib.OK)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True, threaded=True, passthrough_errors=False)
