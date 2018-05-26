@@ -31,15 +31,31 @@
         $.post('/submit', {
           songTitle: songTitle,
           artist: artist
-        }).done(function (data) {
-          $('#features-result').html(JSON.stringify(data, null, 2));
+        }).done(function (features) {
+          $('#features-result').html(JSON.stringify(features, null, 2));
           $('#features-step').fadeIn();
           $.get('/lyrics', {
             song_title: songTitle,
             artist: artist
-          }).done(function (data) {
-            $('#lyrics-result').html(data);
+          }).done(function (lyrics) {
+            $('#lyrics-result').html(lyrics);
             $('#lyrics-step').fadeIn();
+
+            $.ajax({
+                type: 'POST',
+                url: '/playlist',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                  lyrics: lyrics,
+                  features: features
+                })
+            }).done(function(recs) {
+              $('#final-result').html(recs);
+              console.log(recs);
+            }).fail(function(err) {
+              alert('Playlist errored out');
+            });
           }).fail(function (err) {
             alert('Lyrics errored out');
             resetFields();
@@ -121,8 +137,8 @@
 
           </div>
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 player-container">
-          <iframe src="https://open.spotify.com/embed/album/6pkQfQc58FFRwpdqOxJizg" height="520" frameborder="0" allowtransparency="true"></iframe>
+        <div id="final-result" class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 player-container">
+          <!-- <iframe src="https://open.spotify.com/embed/album/6pkQfQc58FFRwpdqOxJizg" height="520" frameborder="0" allowtransparency="true"></iframe> -->
         </div>
       </div>
     </div>
