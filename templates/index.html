@@ -12,29 +12,42 @@
     crossorigin="anonymous">
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script type="text/javascript">
-    var resetFields = function() {
+    var resetFields = function () {
       $('input').val('');
-      $('#features-step').fadeOut();
+      $('#features-step').hide();
+      $('#lyrics-step').hide();
       $('form').fadeIn();
-      
+
     };
 
     $(document).ready(function () {
       $('#features-step').hide();
+      $('#lyrics-step').hide();
       $('form').submit(function (e) {
+        var artist = $('#artist').val();
+        var songTitle = $('#song_title').val();
         e.preventDefault();
+        $('form').fadeOut();
         $.post('/submit', {
-          songTitle: $('#song_title').val(),
-          artist: $('#artist').val()
-        }).done(function(data) {
-          $('form').fadeOut(400, function() {
-            $('#features-result').html(JSON.stringify(data, null, 2));
-            $('#features-step').fadeIn();
-          });
-        }).fail(function(err) {
+          songTitle: songTitle,
+          artist: artist
+        }).done(function (data) {
+          $('#features-result').html(JSON.stringify(data, null, 2));
+          $('#features-step').fadeIn();
+          $.get('/lyrics', {
+            song_title: songTitle,
+            artist: artist
+          }).done(function (data) {
+            $('#lyrics-result').html(data);
+            $('#lyrics-step').fadeIn();
+          }).fail(function (err) {
+            alert('Lyrics errored out');
+            resetFields();
+          })
+        }).fail(function (err) {
           alert('Something went wrong!');
           resetFields();
-        }).always(function() {
+        }).always(function () {
           // resetFields();
         });
       });
@@ -76,10 +89,23 @@
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
           <h1 id="hero-text">CoderSchool Final Project: Machine Learning</h1>
-          <div id="features-step">
-            <h2> Processing features...</h2>
-            <pre id="features-result">
-            </pre>
+          <div id="features-step" class="card text-white bg-warning mb-3">
+            <div class="card-header">Step 1</div>
+            <div class="card-body">
+              <h5 class="card-title">Received features from Spotify...</h5>
+              <p class="card-text">
+                <pre id="features-result">
+                  </pre>
+              </p>
+            </div>
+          </div>
+          <div id="lyrics-step" class="card text-white bg-info mb-3">
+            <div class="card-header">Step 2</div>
+            <div class="card-body">
+              <h5 class="card-title">Received Lyrics from Musixmatch...</h5>
+              <p id="lyrics-result" class="card-text">
+              </p>
+            </div>
           </div>
           <div class="form-container">
             <form>
