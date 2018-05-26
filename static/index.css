@@ -31,16 +31,12 @@
   width: 90%;
   margin-right: auto;
 }
-form {
-/* This bit sets up the horizontal layout */
-  display:flex;
-  flex-direction:row;
-  margin: 50px auto 50px auto;
-  text-align: center;
-  width: 100%;
+#features-step {
+  padding: 20px;
+  background-color: lightgray;
 }
 
-input {
+input[type="text"] {
   width: 100%;
 /* Tell the input to use all the available space */
 /* And hide the input's outline, so the form looks like the outline */

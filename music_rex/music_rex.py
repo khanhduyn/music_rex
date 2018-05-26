@@ -1,7 +1,3 @@
-# CLIENT_ID='37b5edf45b91479d9d01614b6f8de4b2'
-# CLIENT_SECRET='0ebe2de09ed84139ba1a6fb237076b82'
-
-
 from __future__ import print_function    # (at top of module)
 from spotipy.oauth2 import SpotifyClientCredentials
 import json
@@ -11,20 +7,23 @@ import os
 
 from logger import logger
 
+CLIENT_ID='37b5edf45b91479d9d01614b6f8de4b2'
+CLIENT_SECRET='0ebe2de09ed84139ba1a6fb237076b82'
 
 class MusicRex(object):
     def __init__(self, client_id=None, client_secret=None):
-        if not client_id:
-            client_id = os.getenv('CLIENT_ID')
-        if not client_secret:
-            client_secret = os.getenv('CLIENT_SECRET')
+        # if not client_id:
+        #     client_id = os.getenv('CLIENT_ID')
+        # if not client_secret:
+        #     client_secret = os.getenv('CLIENT_SECRET')
 
-        if not client_id or not client_secret:
-            raise Exception("No CLIENT_ID or CLIENT_SECRET in environment.")
+        # if not client_id or not client_secret:
+        #     raise Exception("No CLIENT_ID or CLIENT_SECRET in environment.")
 
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
+
+        self.client_id = CLIENT_ID
+        self.client_secret = CLIENT_SECRET
+        self.client_credentials_manager = SpotifyClientCredentials(self.client_id, self.client_secret)
         self.sp = spotipy.Spotify(client_credentials_manager=self.client_credentials_manager)
 
 
