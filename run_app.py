@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 import json
 import pickle as pkl
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/')
 def index():

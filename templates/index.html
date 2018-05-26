@@ -1,85 +1,81 @@
+<!DOCTYPE html>
+<html lang="">
+
 <head>
-  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <link rel=stylesheet type=text/css href="static/index.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+  <script src=""></script>
+  <title>Music Recommendation System</title>
 </head>
 
 <body>
-  <h1>
-      Music Recc.
-  </h1>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow">
+    <div class="container">
+      <a class="navbar-brand" href="http://www.coderschool.vn/">
+        <picture>
+          <source media="(min-width: 768px)" srcset="https://svgshare.com/i/6RK.svg">
+          <source media="(max-width: 767px)" srcset="https://svgshare.com/i/6P9.svg">
+          <img src="https://svgshare.com/i/6P9.svg" alt="CS-responsive" width="180px;">
+        </picture>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  <div id="song input">
-      <form>
-       <fieldset>
-        <legend>Song Info:</legend>
-          Song Title: <input type="text" id="song-title-submit"><br>
-          Artist: <input type="text" id="artist-submit"><br>
-          <input type="button" name="Submit" value="Submit"/ onclick="sendSongInfo()">
-         </fieldset>
-      </form>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item ml-3 pt-1">
+            <a class="nav-link text-uppercase" href="#">Home</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="bg">
+    <div class="bg-image">
+      <img src="static/17010-NQWF9J.png">
+    </div>
+    <div class="container" id="hero-banner">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <h1 id="hero-text">CoderSchool Final Project: Machine Learning</h1>
+          <div class="form-container">
+            <form>
+              <input type="text" name="title" placeholder="Put in your favorite title">
+              <button title="title">
+                <span class="bolt-icon">
+                  <i class="fas fa-bolt"></i>
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 player-container">
+          <iframe src="https://open.spotify.com/embed/album/6pkQfQc58FFRwpdqOxJizg" height="520" frameborder="0" allowtransparency="true"></iframe>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div>
-<!--   <iframe src="https://open.spotify.com/embed?uri=spotify:user:zeintawil:playlist:53lesAkcF9B8mBCF0CAfHq" width="500" height="200" frameborder="0" allowtransparency="true"></iframe> -->
-  <h1>Spotify Web Playback SDK Quick Start Tutorial</h1>
-  <h2>Open your console log: <code>View > Developer > JavaScript Console</code></h2>
-
-  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+    crossorigin="anonymous"></script>
   <script>
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const token = 'BQBayJLvhDp-Tsp-wRnyh04rput5bJuSn65UWKoYnRnBjpTJ9Ujf6QIxr06hbY1lPuKAD9TqWwcdQHxS-VrUWFbvwb_E-y_La8WGLF0Hhnpwjnrws1uMmpwet3EaEcbAykEabU8Ao8RejFoS9_ERiMYURCRjrR4hXIy5';
-      const player = new Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
-        getOAuthToken: cb => { cb(token); }
+    $(document).ready(function () {
+      $(document).scroll(function () {
+        $(".navbar").toggleClass("bg-light", $(this).scrollTop() > $(".navbar").height());
       });
-
-      // Error handling
-      player.addListener('initialization_error', ({ message }) => { console.error(message); });
-      player.addListener('authentication_error', ({ message }) => { console.error(message); });
-      player.addListener('account_error', ({ message }) => { console.error(message); });
-      player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-      // Playback status updates
-      player.addListener('player_state_changed', state => { console.log(state); });
-
-      // Ready
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
-
-      // Not Ready
-      player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-      });
-
-      // Connect to the player!
-      player.connect();
-    };
+    })
   </script>
-  </div>
 </body>
 
-<script type="text/javascript">
-  function  sendSongInfo(){
-
-    var songTitleObj = $("#song-title-submit")
-    var songTitle = songTitleObj.val()
-
-    var artistObj = $("#artist-submit")
-    var artist = artistObj.val()
-
-    var data = {'song_title': JSON.stringify(songTitle), 'artist': JSON.stringify(artist)}
-
-    $.ajax({
-      type: "POST",
-      url: "/submit",
-      cache: "false",
-      data: data,
-      dataType: "json",
-      success: function(_, status, jqXHR) {
-        console.log('success')
-      }
-    })
-
-  }
-
-</script>
+</html>
