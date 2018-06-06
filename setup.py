@@ -9,6 +9,6 @@ setup(name='Music Rex',
       install_requires=[
             'flask',
             'spotipy',
-            'pymusixmatch'
+            'lyricsgenius'
       ]
      )

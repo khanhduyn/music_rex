@@ -1,16 +1,17 @@
 from __future__ import print_function    # (at top of module)
 from spotipy.oauth2 import SpotifyClientCredentials
-from musixmatch import Musixmatch
+import lyricsgenius as genius
 import json
 import spotipy
 import requests
 import os
 
-from logger import logger
-
 CLIENT_ID='37b5edf45b91479d9d01614b6f8de4b2'
 CLIENT_SECRET='0ebe2de09ed84139ba1a6fb237076b82'
-MUSIXMATCH_KEY='e09ead8b7feaea2847f5195cbcac1e73'
+
+GENIUS_SECRET='1FUgpdlEn3dW7-pe-2XIk8GEIUeFZFLhCCL-2cYBDQeHSojkn80ouMXLktndCjrbBIvmBcTYD1YXgS_3v4eK6g'
+GENIUS_ID='2PPh8E5cmYzeGo5urNOcJ1rgXUaLm8robEoME4cLb_R7UGjaOK4XidvZvW4cIplK'
+GENIUS_ACCESS_TOKEN ='orm_c1zHIuqrvH3fuaCKocSMwlF9N3VgQpQLtT95RBpk-Dyzp-ZeYHXlYBK6FMl7'
 
 class MusicRex(object):
     def __init__(self, client_id=None, client_secret=None):
@@ -22,12 +23,12 @@ class MusicRex(object):
         # if not client_id or not client_secret:
         #     raise Exception("No CLIENT_ID or CLIENT_SECRET in environment.")
 
-        self.musixmatch_key = MUSIXMATCH_KEY
         self.client_id = CLIENT_ID
         self.client_secret = CLIENT_SECRET
+        self.genius_access_token = GENIUS_ACCESS_TOKEN
         self.client_credentials_manager = SpotifyClientCredentials(self.client_id, self.client_secret)
         self.sp = spotipy.Spotify(client_credentials_manager=self.client_credentials_manager)
-        self.mm = Musixmatch(self.musixmatch_key)
+        self.genius = genius.Genius(self.genius_access_token)
 
     def get_top_track(self, artist, track):
         artist_name_formatted = artist.replace(' ', '+')
@@ -37,15 +38,15 @@ class MusicRex(object):
         r = requests.get(url, headers=self.sp._auth_headers())
 
         if not r.status_code == 200:
-            logger.error("No response")
+            print("No response")
             return
 
-        tracks = json.loads(r.content)['tracks']
+        tracks = r.json()['tracks']
         if tracks['total'] > 1:
             top_track = tracks['items'][0]
             return top_track
         else:
-            logger.warn("No tracks found")
+            print("No tracks found")
             return
 
     def get_audio_track_features(self, track_id):
@@ -73,6 +74,12 @@ class MusicRex(object):
         return analysis_features
 
     def get_lyrics(self, artist, track):
+        print(artist)
+        print(track)
+        song = self.genius.search_song(track, artist_name=artist)
+        return song.lyrics
+
+    def get_lyrics_mm(self, artist, track):
         resp = self.mm.track_search(q_track=track, q_artist=artist, page_size=1, page=1, s_track_rating='desc')
         print(json.dumps(resp, indent=4, sort_keys=True))
         top_track = resp["message"]["body"]["track_list"][0]["track"]
