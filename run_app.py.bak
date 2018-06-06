@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, jsonify
 import json
 import pickle as pkl
-import http.client
+import httplib
 
 from music_rex.music_rex import MusicRex
 from music_rex.machine_learning import get_similar_songs
@@ -22,7 +22,7 @@ def submit():
     features = mr.get_audio_track_features(track['id'])
     success = (( features is not None) and len(features) > 0)
 
-    return jsonify(features), (http.client.OK if success else http.client.BAD_REQUEST)
+    return jsonify(features), (httplib.OK if success else httplib.BAD_REQUEST)
 
 @app.route('/lyrics', methods=["GET"])
 def lyrics():
@@ -30,7 +30,7 @@ def lyrics():
     artist = request.args.get('artist')
     lyrics = mr.get_lyrics(artist, song_title)
     success = (( lyrics is not None) and len(lyrics) > 0)
-    return jsonify(lyrics), (http.client.OK if success else http.client.BAD_REQUEST)
+    return jsonify(lyrics), (httplib.OK if success else httplib.BAD_REQUEST)
 
 @app.route('/playlist', methods=["POST"])
 def playlist():
@@ -38,7 +38,7 @@ def playlist():
     lyrics = args["lyrics"]
     features = args["features"]
     recommendations = get_similar_songs(features, lyrics)
-    return jsonify(recommendations), (http.client.OK)
+    return jsonify(recommendations), (httplib.OK)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True, threaded=True, passthrough_errors=False)
