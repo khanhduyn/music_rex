@@ -25,4 +25,4 @@ def get_similar_songs(features, lyrics):
 
   # Provide the lyrics as is; a string
 
-  return recommend_similar_songs(audio_features_list, lyrics_features)
+  return recommend_similar_songs(audio_features_list, lyrics)
