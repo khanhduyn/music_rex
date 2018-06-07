@@ -8,7 +8,7 @@ Run `python setup.py install`. You should probably be using virtualenv.
 
 ## Running App
 
-Run `python run_app.py`. 
+Run `python run_app.py`. The playlist will be running at `http://localhost:8000/`.
 
 ## Adding Machine Learning Part
 
