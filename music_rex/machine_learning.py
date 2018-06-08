@@ -16,8 +16,8 @@ def recommend_similar_songs(audio_features, lyrics_features):
     # etc.
 
 # Return your results as a dict containing a key called 'playlist' , which contains a list of the song tuples.
-    final_result_dictionary = dict(playlist=[song_1._asdict(), song_2._asdict()]) # this example uses only 2 songs but you need to return 10 :)```
-    return final_result_dictionary
+    final_results = [song_1._asdict(), song_2._asdict()] # this example uses only 2 songs but you need to return 10 :)```
+    return final_results
 
 # THIS FUNCTION CONVERTS THE AUDIO FEATURES INTO A LIST BEFORE SENDING THEM TO
 # recommend_similar_songs

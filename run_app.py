@@ -20,7 +20,6 @@ def index():
 
 @app.route('/submit', methods=["POST"])
 def submit():
-    return jsonify("ok"), (http.client.OK)
     args = request.get_json(force=True)
     song_title = args["song_title"]
     artist = args["artist"]
@@ -32,7 +31,6 @@ def submit():
 
 @app.route('/lyrics', methods=["GET"])
 def lyrics():
-    return jsonify("ok"), (http.client.OK)
     song_title = request.args.get('song_title')
     artist = request.args.get('artist')
     lyrics = mr.get_lyrics(artist, song_title)
@@ -42,18 +40,16 @@ def lyrics():
 @app.route('/playlist', methods=["POST"])
 def playlist():
     # print("Calling playlist")
-    # args = request.get_json(force=True)
-    # print(args)
-    # lyrics = args["lyrics"]
-    # features = args["features"]
-    # recommendations = get_similar_songs(features, lyrics)
-    recommendations = get_similar_songs(1, 2)
+    args = request.get_json(force=True)
+    lyrics = args["lyrics"]
+    features = args["features"]
+    recommendations = get_similar_songs(features, lyrics)
+    # recommendations = get_similar_songs(1, 2)
     return jsonify(recommendations), (http.client.OK)
 
 @app.route('/create_playlist', methods=["POST"])
 def create_playlist():
     args = request.get_json(force=True)
-    print(args)
     playlist = args['playlist']
     tracks = mr.get_playlist(playlist)
     return jsonify(tracks), (http.client.OK)

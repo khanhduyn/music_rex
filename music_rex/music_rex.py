@@ -31,9 +31,9 @@ class MusicRex(object):
         self.genius = genius.Genius(self.genius_access_token)
 
     def get_top_track(self, artist, track):
-        artist_name_formatted = artist.replace(' ', '+')
-        track_formatted = track.replace(' ', '+')
-        url = 'https://api.spotify.com/v1/search?q=artist:{}&track:{}&type=track'.format(artist_name_formatted, track_formatted)
+        artist_name_formatted = artist.replace(' ', '%20')
+        track_formatted = track.replace(' ', '%20')
+        url = 'https://api.spotify.com/v1/search?q=artist:{}%20track:{}&type=track'.format(artist_name_formatted, track_formatted)
 
         r = requests.get(url, headers=self.sp._auth_headers())
 
@@ -42,7 +42,8 @@ class MusicRex(object):
             return
 
         tracks = r.json()['tracks']
-        if tracks['total'] > 1:
+
+        if tracks['total'] > 0:
             top_track = tracks['items'][0]
             return top_track
         else:
@@ -90,10 +91,6 @@ class MusicRex(object):
     def get_playlist(self, songlist):
         tracks = []
         for song in songlist:
-            track = get_top_track(song['artist'], song['track'])
-            if len(resp) > 0 and resp['tracks'] is not None and len(resp['tracks']['items']) > 0:
-                track = resp['tracks']['items'][0]
-                tracks.append({"name": track['name'], "preview_url": track['preview_url']})
-        # for track in tracks:
-        #     self.sp.user_playlist_add_tracks(self.id, playlist['id'], [track])
+            track = self.get_top_track(song['artist'], song['title'])
+            tracks.append({"name": track['name'], "artist": track["artists"][0], "image": track["album"]["images"][0], "preview_url": track['preview_url']})
         return tracks
