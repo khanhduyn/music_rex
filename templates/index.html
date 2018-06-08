@@ -11,13 +11,45 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
     crossorigin="anonymous">
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.js"></script>
+  
   <script type="text/javascript">
     var resetFields = function () {
       $('input').val('');
       $('#features-step').hide();
       $('#lyrics-step').hide();
       $('form').fadeIn();
+      $('.spinner').remove();
     };
+
+    var createSpinner = function() {
+      var opts = {
+        lines: 11, // The number of lines to draw
+        length: 50, // The length of each line
+        width: 10, // The line thickness
+        radius: 45, // The radius of the inner circle
+        scale: 0.55, // Scales overall size of the spinner
+        corners: 1, // Corner roundness (0..1)
+        color: 'white', // CSS color or array of colors
+        fadeColor: 'transparent', // CSS color or array of colors
+        speed: 1.4, // Rounds per second
+        rotate: 42, // The rotation offset
+        animation: 'spinner-line-fade-more', // The CSS animation name for the lines
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        className: 'spinner', // The CSS class to assign to the spinner
+        top: '50%', // Top position relative to parent
+        left: '50%', // Left position relative to parent
+        shadow: '0 0 1px transparent', // Box-shadow for the lines
+        position: 'absolute' // Element positioning
+      };
+
+      return new Spinner(opts).spin();
+    }
+    var showSpinner = function() {
+      var spinner = createSpinner();
+      $('.form-container')[0].appendChild(spinner.el);
+    }
 
     $(document).ready(function () {
       $('#features-step').hide();
@@ -27,6 +59,7 @@
         var songTitle = $('#song_title').val();
         e.preventDefault();
         $('form').fadeOut();
+        showSpinner();
         $.post('/submit', {
           songTitle: songTitle,
           artist: artist
@@ -49,7 +82,7 @@
                   lyrics: lyrics,
                   features: features
                 })
-            }).done(function(recs) {
+            }).done(function(recs) {d .
               $('#final-result').html(recs);
               console.log(recs);
             }).fail(function(err) {
@@ -137,7 +170,8 @@
           </div>
         </div>
         <div id="final-result" class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 player-container">
-          <iframe src="https://open.spotify.com/embed/album/6pkQfQc58FFRwpdqOxJizg" height="520" frameborder="0" allowtransparency="true"></iframe>
+          <button class="btn btn-secondary">Create Playlist</button> 
+          <iframe src="" height="520" frameborder="0" allowtransparency="true"></iframe>
         </div>
       </div>
     </div>

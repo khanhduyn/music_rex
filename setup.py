@@ -9,6 +9,7 @@ setup(name='Music Rex',
       install_requires=[
             'flask',
             'spotipy',
-            'lyricsgenius'
+            'lyricsgenius',
+            'flask-cors'
       ]
      )

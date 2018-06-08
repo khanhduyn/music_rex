@@ -6,8 +6,8 @@ import spotipy
 import requests
 import os
 
-CLIENT_ID='37b5edf45b91479d9d01614b6f8de4b2'
-CLIENT_SECRET='0ebe2de09ed84139ba1a6fb237076b82'
+CLIENT_ID='209bafc9b6db4ac2926f963e3f625059'
+CLIENT_SECRET='bae043586f964fb19795682b2c501553'
 
 GENIUS_SECRET='1FUgpdlEn3dW7-pe-2XIk8GEIUeFZFLhCCL-2cYBDQeHSojkn80ouMXLktndCjrbBIvmBcTYD1YXgS_3v4eK6g'
 GENIUS_ID='2PPh8E5cmYzeGo5urNOcJ1rgXUaLm8robEoME4cLb_R7UGjaOK4XidvZvW4cIplK'
@@ -74,8 +74,6 @@ class MusicRex(object):
         return analysis_features
 
     def get_lyrics(self, artist, track):
-        print(artist)
-        print(track)
         song = self.genius.search_song(track, artist_name=artist)
         return song.lyrics
 
@@ -88,3 +86,14 @@ class MusicRex(object):
         lyrics = lyrics_resp["message"]["body"]["lyrics"]["lyrics_body"]
         print(lyrics)
         return lyrics
+
+    def get_playlist(self, songlist):
+        tracks = []
+        for song in songlist:
+            track = get_top_track(song['artist'], song['track'])
+            if len(resp) > 0 and resp['tracks'] is not None and len(resp['tracks']['items']) > 0:
+                track = resp['tracks']['items'][0]
+                tracks.append({"name": track['name'], "preview_url": track['preview_url']})
+        # for track in tracks:
+        #     self.sp.user_playlist_add_tracks(self.id, playlist['id'], [track])
+        return tracks
