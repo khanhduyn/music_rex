@@ -6,12 +6,14 @@ import spotipy
 import requests
 import os
 
-CLIENT_ID='37b5edf45b91479d9d01614b6f8de4b2'
-CLIENT_SECRET='0ebe2de09ed84139ba1a6fb237076b82'
+CLIENT_ID='209bafc9b6db4ac2926f963e3f625059'
+CLIENT_SECRET='bae043586f964fb19795682b2c501553'
 
 GENIUS_SECRET='1FUgpdlEn3dW7-pe-2XIk8GEIUeFZFLhCCL-2cYBDQeHSojkn80ouMXLktndCjrbBIvmBcTYD1YXgS_3v4eK6g'
 GENIUS_ID='2PPh8E5cmYzeGo5urNOcJ1rgXUaLm8robEoME4cLb_R7UGjaOK4XidvZvW4cIplK'
 GENIUS_ACCESS_TOKEN ='orm_c1zHIuqrvH3fuaCKocSMwlF9N3VgQpQLtT95RBpk-Dyzp-ZeYHXlYBK6FMl7'
+
+
 
 class MusicRex(object):
     def __init__(self, client_id=None, client_secret=None):
@@ -31,9 +33,9 @@ class MusicRex(object):
         self.genius = genius.Genius(self.genius_access_token)
 
     def get_top_track(self, artist, track):
-        artist_name_formatted = artist.replace(' ', '+')
-        track_formatted = track.replace(' ', '+')
-        url = 'https://api.spotify.com/v1/search?q=artist:{}&track:{}&type=track'.format(artist_name_formatted, track_formatted)
+        artist_name_formatted = artist.replace(' ', '%20')
+        track_formatted = track.replace(' ', '%20')
+        url = 'https://api.spotify.com/v1/search?q=artist:{}%20track:{}&type=track'.format(artist_name_formatted, track_formatted)
 
         r = requests.get(url, headers=self.sp._auth_headers())
 
@@ -42,12 +44,13 @@ class MusicRex(object):
             return
 
         tracks = r.json()['tracks']
-        if tracks['total'] > 1:
+
+        if tracks['total'] > 0:
             top_track = tracks['items'][0]
             return top_track
         else:
-            print("No tracks found")
-            return
+            print("No tracks found, time to give you up.")
+            return self.get_top_track("Rick Astley", "Never Gonna Give You Up")
 
     def get_audio_track_features(self, track_id):
         audio_features_dict = {}
@@ -74,17 +77,15 @@ class MusicRex(object):
         return analysis_features
 
     def get_lyrics(self, artist, track):
-        print(artist)
-        print(track)
         song = self.genius.search_song(track, artist_name=artist)
-        return song.lyrics
+        if song is not None:
+            return song.lyrics
+        print("Lyrics not found, gonna give you up.")
+        return self.get_lyrics("Rick Astley", "Never Gonna Give You Up")
 
-    def get_lyrics_mm(self, artist, track):
-        resp = self.mm.track_search(q_track=track, q_artist=artist, page_size=1, page=1, s_track_rating='desc')
-        print(json.dumps(resp, indent=4, sort_keys=True))
-        top_track = resp["message"]["body"]["track_list"][0]["track"]
-        track_id = top_track["track_id"]
-        lyrics_resp = self.mm.track_lyrics_get(track_id)
-        lyrics = lyrics_resp["message"]["body"]["lyrics"]["lyrics_body"]
-        print(lyrics)
-        return lyrics
+    def get_playlist(self, songlist):
+        tracks = []
+        for song in songlist:
+            track = self.get_top_track(song['artist'], song['title'])
+            tracks.append({"name": track['name'], "artist": track["artists"][0], "image": track["album"]["images"][0], "preview_url": track['preview_url']})
+        return tracks
