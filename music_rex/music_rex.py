@@ -13,8 +13,6 @@ GENIUS_SECRET='1FUgpdlEn3dW7-pe-2XIk8GEIUeFZFLhCCL-2cYBDQeHSojkn80ouMXLktndCjrbB
 GENIUS_ID='2PPh8E5cmYzeGo5urNOcJ1rgXUaLm8robEoME4cLb_R7UGjaOK4XidvZvW4cIplK'
 GENIUS_ACCESS_TOKEN ='orm_c1zHIuqrvH3fuaCKocSMwlF9N3VgQpQLtT95RBpk-Dyzp-ZeYHXlYBK6FMl7'
 
-
-
 class MusicRex(object):
     def __init__(self, client_id=None, client_secret=None):
         # if not client_id:
